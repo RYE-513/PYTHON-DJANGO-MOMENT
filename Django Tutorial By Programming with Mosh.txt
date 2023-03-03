@@ -1,0 +1,406 @@
+DJANGO accroding to Programming with Mosh
+• Free and open-source framework for buiding web apps with python
+
+Django Features
+1. The admin site
+2. Object-relational mapper (ORM)
+3. Authentication
+4. Caching
+
+Companies using Django
+1. Youtube
+2. Instagram
+3. Spotify
+4. Dropbox
+
+THINGS NEED TO DEVELOP
+A. Python
+- basics
+- classes
+- inheritance
+
+B. Relational Databases
+- tables
+- columns
+- keys
+- relationships
+
+IN THIS SECTION
+1. Introduction to Django
+2. Fundamentals of web development
+3. Setting up the development environment
+4. You first Django project
+5. 2 essential debugging techniques
+
+HOW THE WEB WORKS
+- Django is a framework for building web applications.
+
+FRONT-END
+- Client - loaded in some browsers that sees and interact with.
+
+BACKEND
+- runs a server and interact with data processing
+
+ANALOGY
+
+moshbuy.com <-- URL "Uniform Resource Locator
+can be web page, image, video, pdf
+
+moshbuy.com (client) --request--> (server)
+
+the "server" process it and return a "response" this is HTTP
+HTTP - HyperText Transfer Protocol
+
+"server" generate "HTML" to client
+the other option can generate only "data" to client
+
+
+CLIENT / SERVER
+"Front End" Client
+- React
+- Angular
+- Vue
+- Plain JS
+
+"Back End" Server
+- Django
+- Asp .Net Core
+- Express
+
+• server become gateway to data
+provide endpoints can server talked to 
+
+/products endpoint
+/orders enpoint
+/API endpoint
+
+• API - Application programming Interface
+- is just like a button in remote control all these buttons represent "Interface"
+
+************
+INSTALLING
+************
+
+1.cmd
+
+> python --version
+> python3 --version
+
+> pip install pipenv
+
+
+2. Install VS Code
+install python extension in VS Code
+
+*******************************
+CREATING FIRST DJANGO PROJECT
+*******************************
+
+> cd Desktop
+> mkdir storefront
+> cd storefront
+> pipenv install django
+
+/Desktop/Storefront
+> ls
+- Pipfile - Pipfile.lock
+> code .
+
+• activate this version environmnet interpreter using this cmd
+> pipenv shell
+
+> django-admin # to start a new project
+
+> django-admin startproject storefront
+
+• in VS Code theres three folder of "Storefront" then delete the "storefront folder project"
+• and it will left only Pipfile, Pipfile.lock
+
+> django-admin storefront . # '.' not create another project and to avoid redundancy
+
+> django-runserver # run an error  "Requested setting DEBUG but settings are not configured"
+
+> python manage.py
+> python manage.py runserver 9000 # "9000" is the port number, without putting specific port it turns as "8000" default
+
+* click the 127.0.0.1:8000
+
+******************************************
+USING THE INTEGRATED TERMINAL IN VSCODE
+******************************************
+
+IN VSCODE right click select "Command Palette"
+seach: Python Interpreter
+
+# how to find path in cmd
+> pipenv --venv
+/Users/user/.local/share/virtualenvs/storefront-Xk9k7tz
+
+• go back to VS Code Command Palette "Select Interpreter"
+• Enter interpreter path..
+• paste the path /Users/user/.local/share/virtualenvs/storefront-Xk9k7tz and add /bin/python
+
+# In VS Code terminal type > python manage.py
+
+************************
+CREATING YOUR FIRST APP
+************************
+
+• GO TO VS Code: storefront/settings.py
+• browse INSTALLED_APPS = [ ...... ]
+• remove 'django.contrib.sessions'
+• then saved it
+
+open the VS Code Terminal app
+
+> python manage.py startapp playground
+
+• open VS Code explore panel "at the left side"
+• playground folder was created
+
+• GO TO VS Code: storefront/settings.py
+• browse INSTALLED_APPS = [ ...... ]
+• input 'playground' under 'django.contrib.staticfiles'
+
+***************
+WRITING VIEWS
+***************
+
+• GO TO: playground/views.py
+
+• Create your views here.
+• request -> response
+• request handler
+• action
+
+# views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def say_hello(request):
+    # Pull data from db, Transform, Send Email
+    return HttpResponse('Hello World')
+
+**********************
+MAPPING URLs TO VIEW
+**********************
+
+• in browser: 127.0.0.1:8000/playground/hello
+• create "urls.py" inside of playground
+
+urls.py
+
+from django.urls import path
+from . import views
+
+urlpaterns = [ # URL Configuration
+   path('playground/hello', views.say_hello) # you can remove 'playground' become path(hello/', views.say_hello) because you put 'include' in urls.oy storefront 
+]
+
+• GO TO: storefront/urls.py
+• add "include" function
+
+from django.contrib import admin
+from django.urls import path, include
+
+# playground/hello
+urlpaterns = [
+    path('admin/', admin.site.urls),
+    path('playground/', include('playground.urls'))
+
+• in browser: 127.0.0.1:8000/playground/hello # you can see "Hello World" in browser
+
+****************
+USING TEMPLATES
+****************
+
+# add folder under "Playground" name "templates" and create "hello.html"
+
+# hello.html
+
+{% if name %}
+<h1>Hello {{ name }}</h1>
+{% else %}
+<h1>Hello World</h1>
+{% endif %}
+
+• this syntax looks ugly but django is modular it can easily replaced default engine template
+• we dont really used default engine in django projects
+• we built django in API that returns data not in HTML template
+
+# views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def say_hello(request):
+    return render(request, 'hello.html', { 'name' : 'mosh' })
+
+# in browser: 127.0.0.1:8000/playground/hello # you can see "Hello World" in browser
+
+*******************************
+DEBUGGING DJANGO APPLICATIONS
+*******************************
+
+• IN VSCODE: click the Run and Debug at the left side panel
+• click: create a launch.json file
+• click: Django - Launch a debug a Django Web Application
+
+# launch.json - kind of python dictionary
+
+"configurations": [
+{
+"args": [
+  "runserver",
+  "9000", # add it to not default as 8000
+]
+
+
+• go back to views.py and put some syntax error codes
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def say_hello(request):
+    x = 1; #(1) in vscode it shows red dot on the left this is "breakpoint" click it and start the run and debugging
+    y = 2;
+    return render(request, 'hello.html', { 'name' : 'mosh' })
+
+• (2) go to vs code terminal click the http://127.0.0.1:9000/
+• 4 and it shows "Page Not Found"
+
+• GO TO: 127.0.0.1:9000/playground/hello
+• the VS Code Breakpoint is now activated
+• the left side panel "Variables Section" you can see under "Locals" and "Request object"
+
+• click the Step Over in Run & Debugging or press F10
+• you can see the "x: 1" from the Explore Panel left side under the Variables/Locals/>request:
+
+• in Watch section from Run & Debugging add "x:1" and press run again
+• then the browser will show "Hello Mosh"
+
+# views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def calculate():
+    x = 1
+    y = 2
+    return x
+
+def say_hello(request):
+    x = calculate()
+    return render(request, 'hello.html', {'name' : 'mosh"})
+
+
+• restart the*  debugger
+• refresh the browser
+• click "Step Into" F11 - it takes you to a function problem
+• click "Step Out" Shit+F11 - it holds the specific line of code to not run
+• using "Breakpoint" or the red dot from  a line number code is used to hold the specific code not to run
+• Click: "Disconnect" Shit+F5
+
+• Click: "Run without Debugging" Ctrl+F5
+• GO TO: 127.0.0.1:9000/playground/hello
+
+***************************
+USE DJANGO DEBUG TOOLBAR
+***************************
+
+• GO TO: django-debug-toolbar.readthedocs.io/en/latest/
+• Installation
+• in VS Code Terminal
+
+> pipenv install django-debug-toolbar
+
+• PREREQUISITES | insert 'debug_toolbar' from (storefront/settings.py) below the ('playground',)
+
+• SETTING UP URLconf | insert path('__debug__/', include(debug_toolbar.urls)), from (storefront/urls.py) below the (path('__playground__/', include(playground.urls)),
+• insert "import debug_toolbar" above the "from django.urls import path, include
+
+• ENABLING MIDDLEWARE | insert 'debug_toolbar.middleware.DebugToolbarMiddleware', at "MIDDLEWARE" first line above the 'django.middleware.security.SecurityMiddleware.
+
+• CONFIGURING INTERNAL IPs | insert this code below MIDDLEWARE
+
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1'
+    # ...
+]
+
+• GO TO: hello.html update the code there to...
+
+<html>
+  <body>
+    {% if name %}
+    <h1>Hello {{ name }}</h1>
+    {% else %}
+    <h1>Hello World</h1>
+    {% endif %}
+  </body>
+</html>
+
+• GO TO: browser 127.0.0.1:8000/playground/hello
+• open the django toolbar
+
+********************************
+INTRODUCTION TO DATA MODELING
+********************************
+MODEL - STORE AND RETRIEVE DATA.
+
+What You'll Learn
+- Introduction to data modeling
+- Building an e-commerce data model
+- Organizing models in apps
+- Coding model classes
+
+PRODUCT                    COLLECTION
+- title   *____________1    - title
+- description
+- price
+- inventory
+
+• PRODUCT and COLLECTION are entity or category
+• title, description, price, inventory these are entity "attributes"
+• '*' or 'n' means one to many
+
+• Django automatically add Django ID attribute
+
+RELATIONSHIPS
+- One-to-One   1__________1
+- One-to-many  1__________*
+- Many-to-Many *__________*
+
+***********************************
+BUILDING AN E-COMMERECE DATA MODEL
+***********************************
+
+• THE PHOTO OF 	this DIAGRAM IS AT WIKI/GITHUB OF THIS REPOSITORY
+• Always design your models based on the requirements of your project
+
+****************************
+ORGANIZING MODELS IN APP
+****************************
+
+STORE
+- Product
+- Collection
+- Cart
+- CartItem
+- Order
+- OrderItem
+- Customer
+
+• THE PHOTO OF 	this DIAGRAM IS AT WIKI/GITHUB OF THIS REPOSITORY
+
+• Monolith 
+- as an Application it's more get complex and gets bloated with to many things 
+- and this is called a "Monolith" a large piece of stone
+- some point our application is hard to understand, hard to maintain and hard to reuse.
+- "Do one thing and do it well."
+
+
+
+

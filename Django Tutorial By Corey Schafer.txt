@@ -1,0 +1,518 @@
+****************************
+* PART 1 - GETTING STARTED *
+****************************
+
+• IN CMD:
+$ pip install django # installing django framework using terminal
+
+• IN CMD:
+$ python -m django --version # getting python-django version | 2.1
+
+• IN CMD:
+$ django-admin # shows all the list og subcommands 
+
+• IN CMD:
+$ django-admin startproject rye_django_project # create a new Django project and the folder locate at Desktop
+
+• IN CMD:
+$ cd rye_django_project/
+
+
+# USE SUBLIME TEXT AS CODE EDITOR
+• DRAG THE "rye_django_project" folder into Sublime Text
+
+• IN CMD
+$ tree # it shows the "rye_django_project" files in tree method
+|  |__ __init__.py # this is a "Python Package"
+|  |__ settings.py # SECRET_KEY - adds a lot of security enhancements in Django
+|  |__ urls.py     # this is where we'll set up the mapping from certain URLs to where we sent the user.
+|  |		   # Example: There is one path pattern here set up right now and that is for admin  
+|  |		   #          so if we go to our site and go to the route admin then it will send us to this admin.sites.urls
+|  |__ wsgi.py     # this is how our Python Web Application and web server communicate so Django setup a simple default "wsgi" configuration for us in this file
+|__ manage.py
+
+• IN CMD:
+$ python manage.py runserver
+ ________________________________________________________________________________________________________________________________
+| You have 15 unapplied migration(s) - it will be explain later on								 |
+|																 |
+| Django version (???), using settings 'django_project.settings'								 |
+| Starting development server at "http://127.0.0.1:8000/" - this is called "LOCAL HOST" and IP address of our local machine	 |
+| Quit the server with CONTROL-C.												 |
+|________________________________________________________________________________________________________________________________|
+
+• IN GOOGLE BROWSER: - locate "http://127.0.0.1:8000/" or "localhost:8000"
+		     - locate "localhost:8000/admin"
+
+
+# urls.py -  this is a way to map URLs to certain locations so in this case
+	  -  the "path('admin/', admin.site.urls)" goes to each "logic."
+	  -  logic within that location handles the route and we'll look at adding more routes.
+	  -  it allows the "localhost:8000/admin" to work properly
+
+• IN CMD:
+$ "ctrl+c" # to stop the terminal runserver
+$ pytho manage.py runserver # to run the server again 
+
+**************************************************************
+* PART 2 - ADDING BLOG APPLICATION AND SETTING UP URL ROUTES *
+**************************************************************
+
+• IN CMD:
+$ python manage.py startapp blog # "blog" is the name of our project
+
+• IN CMD:
+$ tree # to see if theres a changes
+
+• IN SUBLIME TEXT:
+• LOCATE: blog/views.py
+ _____________________________________________________
+| from django.shortcuts import render		      |
+| from django.http import HttpResponse		      |
+|		      				      |
+| def home(request):		      		      |
+|     return HttpResponse('<h1>Blog Home</h1>')       |
+|_____________________________________________________|
+
+• CREATE FILE: blog/"urls.py"
+• IN: "urls.py -- blog.project"
+ _____________________________________________________
+| from django.urls import path		 	      |
+| from . import views				      |   '.' - is the current directory
+|		      				      |
+| urlpatterns = [		      		      |
+|     path('', views.home, name='blog-home'),	      |   ' ' - to declare as home page
+| ]						      |
+|_____________________________________________________|
+
+• IN: "urls.py -- django.project"
+ _____________________________________________________
+| from django.contrib import admin             	      |
+| from django.urls import path, include	              |
+|		      				      |
+| urlpatterns = [		      		      |
+|     path('admin/', admin.site.urls),	              | 
+|     path('blog/', include('blog.urls')),	      | 
+| ]						      |
+|_____________________________________________________|
+
+• IN CMD:
+$ python manage.py runserver 
+• IN GOOGLE BROWSER: 
+reload localhost:8000 # "page not found"
+
+• IN CMD:
+DEBUG OUTPUT "GET / HTTP/1.1" 404 2034
+
+• IN GOOGLE BROWSER:
+reload localhost:8000/blog/ # "Blog Home"
+			    # right click open "View Page Source", shows "<h1>Blog Home</h1>"
+
+************************************************************************************
+* PART 2.5 - ADDING BLOG APPLICATION AND SETTING UP URL ROUTES | ADDING "ABOUT HOME" *
+************************************************************************************
+
+• LOCATE: blog/views.py | add "def home"
+ _____________________________________________________
+| from django.shortcuts import render		      |
+| from django.http import HttpResponse		      |
+|		      				      |
+| def home(request):		      		      |
+|     return HttpResponse('<h1>Blog Home</h1>')       |
+|		      				      |
+| def about(request):		      		      |
+|     return HttpResponse('<h1>Blog About</h1>')      |
+|_____________________________________________________|
+
+• CREATE FILE: blog/"urls.py"
+• IN: "urls.py -- blog.project" | add 'about/'
+ _____________________________________________________
+| from django.urls import path		 	      |
+| from . import views				      |
+|		      				      |
+| urlpatterns = [		      		      |
+|     path('', views.home, name='blog-home'),	      |
+|     path('about/', views.about, name='blog-about'), | 
+| ]						      |
+|_____________________________________________________|
+
+• CREATE FILE: blog/"urls.py"
+• IN: "urls.py -- django.project" | add 'dev' == 'blog_dev/'
+ _____________________________________________________
+| from django.contrib import admin             	      |
+| from django.urls import path, include	              |
+|		      				      |
+| urlpatterns = [		      		      |
+|     path('admin/', admin.site.urls),	              | 
+|     path('blog_dev/', include('blog.urls')),	      |  # no one ever confused about what routes are not returning the same results
+| ]						      |
+|_____________________________________________________|
+
+ _____________________________________________________
+|     path('', include('blog.urls')),	   	      | # leaving a black will match the empty path and our project urls and empty path put blog just return at the blog home page
+|_____________________________________________________|	# is completly up to you to make this empty path
+
+**********************
+* PART 3 - TEMPLATES *
+**********************
+
+• CREATE FOLDER: "templates" # so by default django looks for a templates subdirectory and each of our installed apps
+			     # Django Convention - create another subdirectory within our templates directory with the same name as our app
+ 
+• CREATE FOLDER: "blog" from Templates Folder - blog/templates/ # blog (app) -> templates (directory) -> blog (another directory) -> templates.html
+
+• CREATE FILE: inside the blog/templates "home.html" and "about.html"
+ _____________________________________________________
+| <!DOCTYPE html>  				      |
+| <html>					      |
+| <head>					      |
+|     <title></title>				      |
+| </head>					      |
+| <body>				              |
+|     <h1>Blog Home!</h1>			      |
+| </body>					      |
+| </html>					      |
+|_____________________________________________________|
+
+• LOCATE FILE: apps.py
+
+copy the "BlogConfig"
+
+• LOCATE FILE: settings.py "INSTALLED_APPS" | put 'blog.apps.BlogConfig',
+
+ _____________________________________________________
+| INSTALLED_APPS = [				      |
+|      'blog.apps.BlogConfig',		              |
+|      'django.contrib.admin',			      |
+|      'django.contrib.auth',			      |
+|      'django.contrib.contenttypes',		      |
+|      'django.contrib.sessions',		      |
+|      'django.contrib.messages',		      |
+|      'django.contrib.staticfiles',		      |
+| ]			      			      |
+|_____________________________________________________|
+
+• LOCATE: blog/views.py | change "return HttpResponse('<h1>Blog Home</h1>')" to "return render(request, 'blog/home.html')"
+ _____________________________________________________
+| from django.shortcuts import render		      |
+| from django.http import HttpResponse		      |
+|		      				      |
+| def home(request):		      		      |
+|     return render(request, 'blog/home.html') 	      | # "render" function - still returns an HttpResponse in the background
+|		      				      | #		      so still what our view is returning.
+| def about(request):		      		      |
+|     return HttpResponse('<h1>Blog About</h1>')      |
+|_____________________________________________________|
+
+• IN CMD:
+$ python manage.py runserver
+
+• IN BROWSER: localhost:8000 # Blog home! | right click to "View Page Source"
+
+• LOCATE: about.html/blog/templates
+ _____________________________________________________
+| <!DOCTYPE html>  				      |
+| <html>					      |
+| <head>					      |
+|     <title></title>				      |
+| </head>					      |
+| <body>					      |
+|     <h1>About Page</h1>			      |
+| </body>					      |
+| </html>					      |
+|_____________________________________________________|
+
+• LOCATE: blog/views.py | change "return HttpResponse('<h1>Blog About</h1>') " to "return render(request, 'blog/about.html')"
+ _____________________________________________________
+| from django.shortcuts import render		      |
+| from django.http import HttpResponse		      |
+|		      				      |
+| def home(request):		      		      |
+|     return render(request, 'blog/home.html') 	      |
+|		      				      |
+| def about(request):		      		      |
+|     return render(request, 'blog/about.html')       |
+|_____________________________________________________|
+
+• IN BROWSER: localhost:8000/about/ # About Page | right click to "View Page Source"
+
+• LOCATE: blog/views.py | add "posts" dictionaries as dummy post
+ _____________________________________________________
+| from django.shortcuts import render		      |
+|					              | 
+| posts = [					      |
+|     {						      |
+|	  'author': 'CoreyMS',			      |
+|	  'title': 'Blog Post 1',		      |
+|	  'content': 'First post content',	      |
+|	  'date_posted': 'August 27, 2018'	      |
+|     },				              |
+|     {						      |
+|	  'author': 'Rye Ryan',			      |
+|	  'title': 'Blog Post 2',		      |
+|	  'content': 'Second post content',	      |
+|	  'date_posted': 'August 28, 2018'	      |
+|     }						      |
+| ]						      |
+|		      				      |
+| def home(request):				      |
+|     context = {				      |
+|	  'posts' : posts			      |
+|     }		      		      		      |
+|     return render(request, 'blog/home.html') 	      |
+|		      				      |
+| def about(request):		      		      |
+|     return render(request, 'blog/about.html')       |
+|_____________________________________________________|
+
+• LOCATE: home.html/blog/templates
+ _____________________________________________________________________________________
+| <!DOCTYPE html>  				                                      |
+| <html>					                                      |
+| <head>					                                      |
+|     <title></title>				                                      |
+| </head>					                                      |
+| <body>					                                      |
+|     {% for post in posts %}			                                      | # "{% %}" this is for loop
+|	   <h1>{{ post.title }}</h1>		                                      | # "{{}}" to access the variables
+|          <p>By {{ post.author }} on {{ post.date_posted }}</p>		      |
+| 	   <p>{{ post.content }}</p>		                                      |
+|     {% endfor %}			                                              | 
+| </body>					                                      |
+| </html>					                                      |
+|_____________________________________________________________________________________|
+
+• IN BROWSER: localhost:8000 # shows the Blog Post 1 and 2 | right click to "View Page Source"
+
+**************************************************************
+* PART 3.5 - TEMPLATES | home.html adding if-else statements *
+**************************************************************
+
+• LOCATE: home.html/blog/templates
+ _____________________________________________________________________________________
+| <!DOCTYPE html>  				                                      |
+| <html>					                                      |
+| <head>									      |
+|     {% if title %}					                              |
+|         <title>Django Blog - {{ title }}</title>				      |
+|     {% else %}								      |
+|         <title>Django Blog</title>						      |
+|     {% endif %}				                                      |
+| </head>					                                      |
+| <body>					                                      |
+|     {% for post in posts %}			                                      |
+|	   <h1>{{ post.title }}</h1>		                                      |
+|          <p>By {{ post.author }} on {{ post.date_posted }}</p>		      |
+| 	   <p>{{ post.content }}</p>		                                      |
+|     {% endfor %}			                                              | 
+| </body>					                                      |
+| </html>					                                      |
+|_____________________________________________________________________________________|
+
+• LOCATE: about.html/blog/templates | adding if-else statement same with home.html
+ _____________________________________________________________________________________
+| <!DOCTYPE html>  				                                      |
+| <html>					                                      |
+| <head>									      |
+|     {% if title %}					                              |
+|         <title>Django Blog - {{ title }}</title>				      |
+|     {% else %}								      |
+|         <title>Django Blog</title>						      |
+|     {% endif %}				                                      |
+| </head>					                                      |
+| <body>					                                      |
+|	<h1>About Page</h1>							      |
+| </body>									      |
+| </html>									      |
+|_____________________________________________________________________________________|
+
+• LOCATE: blog/views.py | add {'tittle': })
+ _________________________________________________________________________
+| from django.shortcuts import render		  	       	          |
+|					                	          | 
+| posts = [					      	       	          |
+|     {						      	       	          |
+|	  'author': 'CoreyMS',			      	       	          |
+|	  'title': 'Blog Post 1',		      	       	          |
+|	  'content': 'First post content',	      	       	          |
+|	  'date_posted': 'August 27, 2018'	      	       	          |
+|     },				              	       	          |
+|     {						      	       	          |
+|	  'author': 'Rye Ryan',			      	       	          |
+|	  'title': 'Blog Post 2',		      	       	          |
+|	  'content': 'Second post content',	      	       	          |
+|	  'date_posted': 'August 28, 2018'	      	       	          |
+|     }						      	       	          |
+| ]						     	       	          |
+|		      				     	       	          |
+| def home(request):				     	       	          |
+|     context = {				     	       	          |
+|	  'posts' : posts			       	       	       	  |
+|     }		      		      		       	       	       	  |
+|     return render(request, 'blog/home.html') 	       	       	          |
+|		      			                         	  |
+| def about(request):		      		      		          |
+|     return render(request, 'blog/about.html', {'title': 'About'})       |
+|_________________________________________________________________________|
+
+• IN BROWSER: 
+localhost:8000 # title tab "Django Blog"
+localhost:8000/about # title tab "Django Blog"
+
+**********************************
+* PART 3 - TEMPLATES INHERITANCE *
+**********************************
+
+• CREATE FILE: inside the blog/templates "base.html" | # we want to pick out all of the repeated sections between
+						       # our home and about templates.
+• LOCATE FILE: "base.html", copy those codes from "about.html" to "base.html"
+ _____________________________________________________________________________________
+| # BASE TEMPLATE | INHERIT PARENTS 						      |
+|										      |
+| <!DOCTYPE html>  				                                      |
+| <html>					                                      |
+| <head>									      |
+|     {% if title %}					                              |
+|         <title>Django Blog - {{ title }}</title>				      |
+|     {% else %}								      |
+|         <title>Django Blog</title>						      |
+|     {% endif %}				                                      |
+| </head>					                                      |
+| <body>					                                      |
+|     {% block content %}{% endblock %}					 	      | # home and about templates will inherit to base template
+| </body>									      | # and get all of this information and then we'll just override content section
+| </html>									      |
+|_____________________________________________________________________________________|
+
+• LOCATE: home.html/blog/templates
+ _____________________________________________________________________________________
+| # HOME TEMPLATE 								      |
+|										      |
+| {% extends "blog/base.html" %}                                  		      |
+| {% block content %}    						              |
+|     {% for post in posts %}			                                      |
+|	   <h1>{{ post.title }}</h1>		                                      |
+|          <p>By {{ post.author }} on {{ post.date_posted }}</p>		      |
+| 	   <p>{{ post.content }}</p>		                                      |
+|     {% endfor %}			                                              | 
+| {% endblock content %}							      |
+|_____________________________________________________________________________________|
+
+• LOCATE FILE: about.html
+ _____________________________________________________________________________________
+| # ABOUT TEMPLATE 								      |
+|										      |
+| {% extends "blog/base.html" %}                                  		      |
+| {% block content %}    						              |
+|     <h1>About Page</h1>                  					      |
+| {% endblock content %}							      |
+|_____________________________________________________________________________________|
+
+• IN BROWSER: "SAME"
+localhost:8000 # title tab "Django Blog"
+localhost:8000/about # title tab "Django Blog"
+
+BOOTSTRAP - popular library that makes it easy to add some nice styles
+
+• GO TO: https://getbootstrap.com/docs/4.0/getting-started/introduction/#starter-template
+• copy the <head> ..... </head> codes inside the 
+
+• LOCATE FILE: "base.html" | ADD SOME BOOTSTRAP STYLES
+__________________________________________________________________________________________________________________________________________________________________________
+# BASE TEMPLATE | INHERIT PARENTS 						      
+										      
+<!DOCTYPE html>  				                                      
+<html>					                                      
+<head>
+
+   <!-- Required meta tags -->
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+									      
+    {% if title %}					                              
+        <title>Django Blog - {{ title }}</title>				      
+    {% else %}								      
+        <title>Django Blog</title>						      
+    {% endif %}				                                      
+</head>					                                      
+<body>
+    <div class="container">					                                      
+       {% block content %}{% endblock %}
+    </div>
+  
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+					 	      
+</body>									      
+</html>									      
+__________________________________________________________________________________________________________________________________________________________________________
+
+• IN CMD: check the terminal surver is still running
+
+• IN BROWSER:
+localhost:8000 # Blog Post is has a margin now
+localhost:8000/about # "About Page" has margin now
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ _____________________________________________________
+|						      |
+|						      |
+|						      |
+|						      |
+|						      |
+|						      |
+|_____________________________________________________|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

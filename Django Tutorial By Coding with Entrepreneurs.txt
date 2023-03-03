@@ -1,0 +1,2456 @@
+DJANGO TUTORIAL BY CODING WITH ENTREPRENEURS
+- joincfe.com/github
+- https://github.com/codingforentrepreneurs/Try-Django
+- djangoproject.com
+
+***********
+* LEGENDS *
+***********
+
+">" - executing a code from cmd
+"•" - steps from executing one-by-one
+"*" - taking a comment explanayion.
+"#" - comment from python
+
+*******************
+* GETTING STARTED *
+*******************
+
+IN CMD:
+> python -v
+> pythin3 -v
+
+IN CMD: *another window*
+> ls <if theres no "Dev" folder make one.>
+Dev
+
+> cd Dev
+> mkdir trydjango
+ cd trydjango
+> virtualenv
+
+/Users/dev/trydjango
+> ls
+> virtualenv -p python3 . <use this if your python3 is 3.6.5> and shows <installing in terminal>
+
+> source bin/activate
+> pip install django==2.0.7 <this version is good for beginners>
+
+IN CMD: *another window*
+
+> ls
+> cd Dev
+> ls
+> cd trydjango
+> ls
+> source bin/activate
+> deactivate
+
+> pip freeze <to see the version or running???>
+
+> source bin/activate
+> pip freeze
+
+IN CMD: *another window*
+
+> mkdir Dev2
+> cd Dev2
+> ls
+> virtualenv venv
+
+*New python executable.... pip, wheel...done.
+
+> virtualenv ven2 -p python3
+
+> virtualenv ven3 -p /usr/local/bin/python3
+
+*other sample*
+
+> mkdir venv4
+> cd venv4
+> virtual . -p python3
+
+********************************
+CREATE A BLANK DJANGO PROJECT
+********************************
+
+IN CMD:
+> pip freeze
+
+IN CMD: *another window*
+> cd Dev/trydjango
+> source bin/activate
+> ls
+
+> mkdir src 
+> cd src
+> ls
+> cd .. <to go back>
+> cd .. <to go back>
+> ls <to check the "src" folder>
+
+> cd src
+> ls
+> django-admin startproject trydjango .
+> ls <you'll se "manage.py" and "trydjango"
+
+> python manage.py runserver
+*performing system checks...*
+*Starting development server at http://127.0.0.1:8000/*
+
+***********
+SETTINGS
+***********
+ 
+• go to trydjango and browse "settings.py"
+
+import os
+
+BASE DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# ./Users/dev/trydjango/src 
+# or print(BASE DIR) and run this file in termnial in cmd: > python manage.py runserver | 'manage.py' is the main class python file
+
+• SECRET_KEY - for security process
+• DEBUG = True - fixing syntax or code error
+• ALLOWED_HOSTS = [] - domain host
+• INSTALLED_APPS - cornerstore of django
+• MIDDLEWARE - how requests and security handle built-in
+• ROOT_URLCONF - this is how django knows how to route given URL
+• TEMPLATES = when we store them, rendered, work etc. 
+
+* HTML pages can rendered in django
+
+• WSGI_APPLICATION - this how the server works.
+• DATABASES - backend data record
+• AUTH_PASSWORD_VALIDATORS - security purposes
+• LANGUAGE CODE, TIME_ZONE ... USE_TZ - some miscelleanous stuff
+• STATIC_URL = '/static/'
+
+DATABASES = { # TO RUN THIS TYPE IN CMD TERMNIAL: . python manage.py migrate
+    'default' : {
+	'ENGINE': 'django.db.backends.sqlite3',
+	'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), # if you change the 'db.sqlite3' into 'db2.sqlite3' | it will properly worked on terminal 
+													# | and it will create another file as 'db2.sqlite3'.
+    }
+}
+
+**********************
+BUILT-IN COMPONENTS
+**********************
+
+• INSTALLED_APPS - contains your third party apps  
+• 127.0.0.1:8000/admin/login/?next=/admin/ - it shows the "Django Administraion with username and password	
+
+> cd dev/trydjango
+> source bin/activate
+> cd src
+> ls <no migrations to apply>
+
+> python manage.py createsuperuser - create a user that has access to theadmin 
+-- Username
+-- Password
+-- Password (again)
+<Superuser created succesfully> 
+
+• GO TO: 127.0.0.1:8000/admin/login/?next=/admin/
+• login
+• select "Users + Add" from Authentication adn Authorization
+• Update Personal Info
+
+**************************
+YOUR FIRST APP COMPONENT
+**************************
+
+IN CMD:
+> cd Dev/trydjango
+> source bin/activate
+> ls
+
+> python manage.py startapp products - added a new folder
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+• GO TO: products/migrations/model.py
+
+from django.db import models
+
+class Product(models.Model)
+	title       = models.TextField()
+	description = models.TextField()
+	price       = models.TextField()
+	summary     = models.TextField(default="this is cool") # shows in cmd: You are trying to add a non-nullable field 'summary' to product without default.....
+					 # Please select a fix: (1) Provide a one-off default now (set on all existing rows with a nill value for this column (2) Quit, and let me add a default in model.py
+					 # Select an option: 2
+____________________________________________________________________________________________________________________________________________________________________________________________________________________
+• GO TO: settings.py
+
+- add 'products' below the 'django.contrib.staticfiles'
+
+• GO TO: CMD TERMINAL
+
+> python manage.py migrate
+> python manage.py makemigrations
+> python manage.py migrate
+
+• after making -> summary = models.TextField(default="this is cool" <-
+> python manage.py makemigrations - THIS CODE IS TO HAVE CHANGING IN "models.py"
+> python manage.py migrate - THIS CODE IS TO HAVE CHANGING IN "models.py"
+
+• GO TO: products/migrations/admin.py
+_______________________________________________________________________________________________________________________________________________________________
+from django.contrib import admin
+
+from .models import Product # this called "relatively import" we import "product class" from "models.py" because they are in same directory or module
+
+admin.site.register(Product)
+_______________________________________________________________________________________________________________________________________________________________
+
+• GO TO: 127.0.0.1:8000/admin/login/?next=/admin/
+• select Product below and input some data and press save and it was save in database
+
+********************************************
+CREATE PRODUCT OBJECTS IN THE PYTHON SHELL
+********************************************
+
+IN CMD:
+> cd Dev/trydjango
+> source bin/activate
+> ls
+> python manage.py shell *all the django project stuff will work inside the cmd terminal*
+__________________________________________________________________________________________________
+>>> from products.models import Product
+>>> Product.objects.all()
+<QuerySet [<Product: Product object (1)>]>
+
+>>> Product.objects.create(title='New product 2', description='another one', price='19312', summary='sweet')
+<Product: Product object (2)
+__________________________________________________________________________________________________
+
+*****************
+NEW MODEL FIELDS
+*****************
+
+• TO START OVER REMOVE:
+-- /migrations/__pycache__//*0001_initial.py
+-- /migrations/__pycache__//*0002_product_summary.py
+-- /migrations/__pycache__ folder
+-- /migrations/db.sqlite3
+
+• GO TO: https://docs.djangoproject.com/en/2.0/ref/models/fields/#field-types
+
+__________________________________________________________________________________________________________
+• GO TO: products/migrations/model.py
+
+from django.db import models
+
+class Product(models.Model)
+	title       = models.CharField(max_length=120) # max_length = required
+	description = models.TextField(blank=True, null=True)
+	price       = models.DecimalField(decimal_places=2, max_digits=10000)
+	summary     = models.TextField()
+__________________________________________________________________________________________________________
+
+• GO TO: CMD TERMINAL | everytime you changes in models.py always type "> python manage.py makemigrations" and "> python manage.py migrate".
+> python manage.py makemigrations
+> python manage.py migrate
+
+> python manage.py createsuperuser # made a new one because you deleted before the "-- /migrations/db.sqlite3"
+
+> python manage.py shell
+
+>>> from products.models import Product
+>>> Product.objects.create(title='Newer Title', description='another one', price='239.99', summary='Awesome')
+
+*****************
+CHANGE A MODEL 
+****************
+* adding "Field" to a models.py the database don't know about it
+__________________________________________________________________________________________________________
+• GO TO: products/migrations/model.py
+
+from django.db import models
+
+class Product(models.Model)
+	title       = models.CharField(max_length=120) # max_length = required
+	description = models.TextField(blank=True, null=True)
+	price       = models.DecimalField(decimal_places=2, max_digits=10000)
+	summary     = models.TextField()
+	featured    = models.BooleanField() # this BooleanField don't show in browser django dashboard
+#       featured    = models.BooleanField(null=True) # this "null=True" or "default=True" is surpass the error in our cmd terminal
+__________________________________________________________________________________________________________
+• GO TO: CMD TERMINAL
+
+> python manage.py makemigrations # if you execute it the "featured = models.BooleanField()" they don't know about it
+
+"TO SURPASS THE ERROR THERES TWO OPTION [1] Put "null=True" or "default=True" [2] Select (1) Provide a one-off default now (set on all existing rows with a nill value for this column) 
+
+# Please select a fix: (1) Provide a one-off default now (set on all existing rows with a null value for this column) 
+# (2) Quit, and let me add a default in model.py
+
+# Select an option: 1
+# then type "True" | the "0002_initial.py" was created and still database doesn't know about it
+
+* the migrations/__pycache__/0001_initial.py - is checking what's in here for this model that the new field you added the "featured = models.BooleanField()" is not in there.
+* we gonna assume the database know about it
+
+> python manage.py migrate
+
+* the "featured" button created in our django browser dashboard
+
+_______________________________________________________________________________________________________________
+• GO TO: CMD TERMINAL | always execute this for updating a code from managa.py
+> python manage.py makemigrations
+> python manage.py migrate
+
+"blank" - has to do what field was render
+"null" - has the database
+
+"blank=false" - required and it wont rendered as required and has nothing to do in databases
+"nill=true" - in database can be null or empty and some changing in our model
+
+summary = models.TextField(blank="True", null="False") - the "summary" is no longer bold in django browser
+summary = models.TextField(blank="False", null="False") - the "summary" is bold in django browser and you need to input there because its required
+_______________________________________________________________________________________________________________
+
+*************************************
+DEFAULT HOMEPAGE TO CUSTOM HOMEPAGE
+*************************************
+
+• GO TO: trydjango/__pychache__/settings.py
+add: 'pages' and 'products' 
+
+INSTALLED_APPS = [
+     'django.contrib.admin',
+     'django.contrib.auth',
+     'django.contrib.contenttypes',
+     'django.contrib.sessions',
+     'django.contrib.messages',
+     'django.contrib.staticfiles',
+
+     'pages',
+     'products',
+]
+
+_______________________________________________________________________________________________________________
+• GO TO: trydjango/__pychache__/views.py - create "views.py"
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+# create your views here.
+
+def home_view(*args, **kwargs): # *args, **kwargs
+    return HttpResponse("<h1>Hello World</h1>") # string of HTML Code
+_______________________________________________________________________________________________________________
+• GO TO: trydjango/__pychache__/urls.py
+
+from django.contrib import admin
+from django.urls import path
+
+from pages import views # or from pages.views import home_view
+
+urlpatters = [
+    path('', home_view, name='home'), # path('', views.home_view, name='home'),
+    path('admin/', admin.site.urls),
+]
+_______________________________________________________________________________________________________________
+
+***************************
+URL ROUTING AND REQUESTS
+***************************
+
+• GO TO: trydjango/__pychache__/views.py - create "views.py"
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+# create your views here.
+
+def contact_view(*args, **kwargs):
+    return HttpResponse("<h1>Contact Page</h1>")
+
+
+def about_view(*args, **kwargs):
+    return HttpResponse("<h1>About Page</h1>")
+
+
+def social_view(*args, **kwargs):
+    return HttpResponse("<h1>Social Page</h1>")
+_______________________________________________________________________________________________________________
+• GO TO: trydjango/__pychache__/urls.py
+
+from django.contrib import admin
+from django.urls import path
+
+from pages.views import contact_view, about_view, social_view
+
+urlpatters = [
+    path('contact/', contact_view),
+    path('about/', about_view),
+    path('social/', social_view),
+    path('admin/', admin.site.urls),
+]
+_______________________________________________________________________________________________________________
+
+*******************************
+GETTING ROUTING AND REQUESTS
+*******************************
+
+_______________________________________________________________________________________________________________
+• GO TO: trydjango/__pychache__/views.py - create "views.py"
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+# create your views here.
+
+def home_view(request, *args, **kwargs): # () {}
+    print(args, kwargs) # it shows in terminal: "(<WSGIRequest: GET '/'>,) {}
+    print(request.user) # it shows in terminal: "cfe"
+    return HttpResponse("<h1>Home Page</h1>")
+
+
+def contact_view(request, *args, **kwargs): # IT SHOWS IN TERMINAL: "() {}"
+    return HttpResponse("<h1>Contact Page</h1>")
+
+def about_view(request, *args, **kwargs): # IT SHOWS IN TERMINAL: "() {}"
+    return HttpResponse("<h1>About Page</h1>")
+
+
+def social_view(request, *args, **kwargs): # IT SHOWS IN TERMINAL: "() {}"
+    return HttpResponse("<h1>Social Page</h1>")
+
+* if you open the 127.0.0.1:8000 # IT SHOWS IN TERMINAL: AnonymousUser
+_______________________________________________________________________________________________________________
+
+******************
+DJANGO TEMPLATES
+******************
+_______________________________________________________________________________________________________________
+• GO TO: trydjango/__pychache__/views.py - create "views.py"
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+# create your views here.
+
+def contact_view(request, *args, **kwargs): # () {}
+    print(args, kwargs)
+    print(request.user)
+    # return HttpResponse("<h1>Contact Page</h1>")
+    return render(request, "home.html", {}) # IT SHOWS IN BROWSER: TemplateDoesNotExist at /
+
+
+def about_view(request, *args, **kwargs): # it shows in terminal: "() {}"
+    return HttpResponse("<h1>About Page</h1>")
+
+
+def social_view(request, *args, **kwargs): # it shows in terminal: "() {}"
+    return HttpResponse("<h1>Social Page</h1>")
+_______________________________________________________________________________________________________________
+
+• MAKE A FOLDER src/templates
+• MAKE A .py FILE "home.html"
+
+• GO TO: src/templates/home.html
+
+_____________________________________
+<h1>Hello Rye Ryan</h1>
+<p>This is a template</p>
+_____________________________________
+
+• GO TO: /products/migrations/settings.py
+• GO TO: TEMPLATES = [ ........................ ]
+'DIRS': ["pwd cmd"] # the code above will show in browser
+'DIRS': [os.path.join(BASE_DIR, "template")], # still working
+
+• MAKE A .py files from templates "about.html", "contact.html", "urls.py"
+
+_______________________________________________________________________________________________________________
+• GO TO: trydjango/__pychache__/views.py - create "views.py"
+
+from django.http import HttpResponse
+from django.shortcuts import render
+
+def home_view(request, *args, **kwargs): # () {}
+    print(args, kwargs)
+    print(request.user)
+    return render(request, "home.html", {})
+
+def contact_view(request, *args, **kwargs):
+    return render(request, "contact.html", {})
+
+
+def about_view(request, *args, **kwargs): # it shows in terminal: "() {}"
+    return render(request, "about.html", {})
+
+
+def social_view(request, *args, **kwargs): # it shows in terminal: "() {}"
+    return render(request, "social.html", {})
+_______________________________________________________________________________________________________________
+
+**********************************
+DJANGO TEMPLATING ENGINE BASICS
+**********************************
+
+<h1>Hello World</h1>
+{{ request.user }}  	# chrome_browser: "CFE" # incognito_browser: "AnonymousUser"
+<p>This is a template</p>
+
+<h1>Hello World</h1>
+{{ request.user.is_authenticate }} # True
+<p>This is a template</p>
+
+______________________________________________________________________
+• CREATE: "base.html" from templates folder
+
+<!doctype html>
+<html>
+<head>
+    <tittle>Coding for Entrepreneurs is doing Try Django</title>
+</head>
+<body>
+     {% block content %}
+     replace me
+     {% endblock %}
+
+     {% block another_content_area %}
+     replace me
+     {% endblock %}
+     </body>
+</html>
+______________________________________________________________________
+• CREATE: "home.html" from templates folder
+
+{% extends 'base.html' %} # this focusing on "<title>" tag from "base.html" | Coding for Entrepreneurs is doing Try Django
+
+{% block content %}
+   <h1>Hello World</h1>
+
+   <p>This is a Template</p>
+{% endblock %}
+______________________________________________________________________
+• CREATE: "about.html" from templates folder
+
+{% extends 'base.html' %} # this focusing on "<body>" tag from "base.html" | replace me
+
+<h1>About</h1>
+<p>This is a template</p>
+______________________________________________________________________
+• CREATE: "about.html" from templates folder "ANOTHER EXAMPLE"
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About</h1>		# shows in browser
+<p>This is a template</p> # shows in browser
+{% endblock content%}
+
+***********************
+INCLUDE TEMPLATE TAG
+***********************
+______________________________________________________________________
+• CREATE: "navbar.html" from templates folder
+
+<nav>
+    <ul>
+	<li>Brand</li>
+	<li>Contact</li>
+	<li>About</li>
+    <ul>
+</nav>
+______________________________________________________________________
+• GO TO: "base.html" from templates folder
+
+<!doctype html>
+<html>
+<head>
+    <tittle>Coding for Entrepreneurs is doing Try Django</title>
+</head>
+<body>
+     {% include 'navbar.html' %} # this connected to all templates html files
+
+     {% block another_content_area %}
+     replace me
+     {% endblock %}
+
+     </body>
+</html>
+
+*********************************
+RENDERING CONTEXT IN A TEMPLATE
+*********************************
+
+• GO TO: "contact.html" from templates folder
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Contact</h1>
+<p>This is a template</p>
+{% endblock content%}
+______________________________________________________________________
+• GO TO: "views.py" from templates folder
+
+def about_view(request, *args, **kwargs):
+    my_context = {
+        "my_text": "This is about us",
+        "my_number": 123
+	"my_list": [123, 4242, 12313]
+
+    }
+    return render(request, "about.html", my_context)
+______________________________________________________________________
+• GO TO: "about.html" from templates folder
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About</h1>
+<p>This is a template</p>
+
+<p>
+{{ my_text }}, {{ my_number }} # this is "context variable"
+{{ my_list }}
+</p>
+
+{% endblock content%}
+
+*****************************
+USING FOR LOOP IN A TEMPLATE
+*****************************
+______________________________________________________________________
+• GO TO: "about.html" from templates folder
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About</h1>
+<p>This is a template</p>
+
+<p>
+{{ my_text }}, {{ my_number }} # this is "context variable"
+{{ my_list }}
+</p>
+
+<ul>
+   <li>Item 1</li>
+   <li>Item 2</li>
+</ul>
+
+<ul>
+{% for my_sub_item in my_list%}
+    <li>{{ forloop.counter }} - {{ my_sub_item }}</li>
+{% endfor %}
+</ul>
+
+{% endblock content%}
+______________________________________________________________________
+• GO TO: "views.py" from templates folder
+
+def about_view(request, *args, **kwargs):
+    my_context = {
+        "my_text": "This is about us",
+        "my_number": 123
+	"my_list": [123, 4242, 12313] # [1313, 4231, 312, "ABC"]
+
+    }
+    for item in [123, 12331, 1233]:
+	my_context['item1'] = item
+    return render(request, "about.html", my_context)
+
+
+*****************************************
+USING CONDITION STATEMENTS IN A TEMPLATE
+*****************************************
+______________________________________________________________________
+• GO TO: "views.py" from templates folder
+
+def about_view(request, *args, **kwargs):
+    my_context = {
+        "my_text": "This is about us",\
+	"this_is_true": True,
+        "my_number": 123
+	"my_list": [123, 4242, 12313] # [1313, 4231, 312, "ABC"]
+	
+
+    }
+
+______________________________________________________________________
+• GO TO: "about.html" from templates folder
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About</h1>
+<p>This is a template</p>
+
+<p>
+{{ my_text }}, {{ my_number }} # this is "context variable"
+{{ my_list }}
+</p>
+
+<ul>
+   <li>Item 1</li>
+   <li>Item 2</li>
+</ul>
+
+<ul>
+{% for abc in my_list%}
+    {% if abc == 312 %}
+       <li>{{ forloop.counter }} - {{  abc|add:22 }}</li> # "add:22" is the filter
+    {% elif abc == "Abc" %}
+       <li>"This is not the network"</li>
+    {% endif %}
+    <li>{{ forloop.counter }} - {{  abc }}</li>
+{% endfor %}
+</ul>
+
+{% endblock content%}
+
+*****************************
+TEMPLATE TAGS AND FILTERS
+*****************************
+
+# https://docs.djangoproject.com/en/2.0/ref/templates/builtins/#built-in-filter-reference
+
+______________________________________________________________________
+• GO TO: "views.py" from templates folder
+
+def about_view(request, *args, **kwargs):
+    my_context = {
+        "title": "This is about us", # "my_text" turns into "title"
+        "my_number": 123
+	"my_list": [123, 4242, 12313] # [1313, 4231, 312, "ABC"]
+
+    }
+    for item in [123, 12331, 1233]:
+	my_context['item1'] = item
+    return render(request, "about.html", my_context)
+
+______________________________________________________________________
+• GO TO: "about.html" from templates folder
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>About</h1>
+
+<h3>{{ title|capfirst|upper }}</h3> # or <h3>{{ title|center:"15" }}</h3>
+<p>This is a template</p>
+
+{{ my_html|safe }} # or {{ my_html|striptags|slugify }}
+
+<p>
+, {{ my_number }} # this is "context variable"
+{{ my_list }}
+</p>
+
+<ul>
+   <li>Item 1</li>
+   <li>Item 2</li>
+</ul>
+
+<ul>
+{% for abc in my_list%}
+    {% if abc == 312 %}
+       <li>{{ forloop.counter }} - {{  abc|add:22 }}</li> # "add:22" is the filter
+    {% elif abc == "Abc" %}
+       <li>"This is not the network"</li>
+    {% endif %}
+    <li>{{ forloop.counter }} - {{  abc }}</li>
+{% endfor %}
+</ul>
+
+{% endblock content%}
+
+********************************************
+RENDER DATA FROM THE DATABASE WITH A MODEL
+********************************************
+
+• GO TO: CMD TERMINAL
+> (trydjango) python manage.py shell
+>>> from products.models import Product
+>>> Product.objects.get(id=1)
+
+<Product: Product object (1)>
+
+>>> obj = Product.objects.get(id=1)
+>>> dir(obj)
+
+>>> obj.title
+'New Product'
+_____________________________________________________________
+• GO TO: views.py/products
+
+from django.shortcuts import render
+from .models import Product
+
+def product_detail_view(request):
+    obj = Product.objects.get(id=1)
+    context = {
+	'title': obj.title,
+	'description': obj.description
+    }
+    return render(request, "product/detail.html", {})     
+__________________________________________________________________________________________________________________________
+• GO TO: MAKE "product" folder under of "templates"
+• MAKE: "detail.html"
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Item</h1>
+
+<h1>{{ title }}</h1>
+<p>{% if description !== None and description !== '' %}{{ description }}{% else %}Description Coming Soon{% endif %}</p>
+
+{% endblock content%}
+__________________________________________________________________________________________________________________________
+• GO TO: "urls.py" from trydjango/__pycache__
+• add "from products.views import product_detail_view" below the "from pages.views import home_view, contact_view, about_view
+
+• add "path('product/', product_detail_view),
+
+• GO TO: 127.0.0.1:8000/product/
+
+************************
+CHANGE INTO ".object"
+************************
+
+• IN: "detail.html"
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ object.title }}</h1>
+<p>{% if object.description !== None and object.description !== '' %}{{ object.description }}{% else %}Description Coming Soon{% endif %}</p>
+
+{{ object.price }}
+{% endblock content%}
+
+• IN: views.py
+
+from django.shortcuts import render
+from .models import Product
+
+def product_detail_view(request):
+    obj = Product.objects.get(id=1)
+    context = {
+	'object': obj
+    }
+    return render(request, "product/detail.html", {})   
+
+_______________________________________________________________________________________________________________________________________________________________________________________
+
+***************************************
+HOW DJANGO TEMPLATES LOAD WITH APPS
+***************************************
+
+• MAKE A FOLDER "TEMPLATES" FROM PRODUCTS:
+• MAKE A FOLDER "PRODUCTS" FROM TEMPLATES
+• that should be "products/templates/products
+
+• MAKE A FILE "product_details.html" FROM "PRODUCTS"
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>In App template: {{ object.title }}</h1>
+<p>{% if object.description != None and object.description != '' %}{{ object.description }}{% else %}Description Coming Soon{% endif %}</p>
+
+{{ object.price }}
+{% endblock content%}
+
+_____________________________________________________________
+• GO TO: views.py/products
+
+from django.shortcuts import render
+from .models import Product
+
+def product_detail_view(request):
+    obj = Product.objects.get(id=1)
+    # context = {
+    #	'title': obj.title,
+    #	'description': obj.description
+    # }
+    context = {
+	'object': obj
+    }
+    return render(request, "product/product_detail.html", context)
+_____________________________________________________________    
+
+*********************
+DJANGO MODEL FORMS
+*********************
+_____________________________________________________________
+• MAKE A FILE "forms.py" FROM "PRODUCTS"
+
+from django import forms
+
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+   class Meta:
+       model = Product
+       fields = [
+	   'title',
+	   'description',
+	   'price'
+       ]
+____________________________________________________________________________________
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def product_create_view(request):
+    form =  ProductForm(request.POST or None)
+    if form.is_valid():
+	form.save()
+	
+    context = {
+	'form': form
+    }
+    return render(request, "product/product_create.html", context)
+
+
+def product_detail_view(request):
+    obj = Product.objects.get(id=1)
+    # context = {
+    #	'title': obj.title,
+    #	'description': obj.description
+    # }
+    context = {
+	'object': obj
+    }
+    return render(request, "product/product_detail.html", context)
+____________________________________________________________________________________
+
+• CREATE A FILE "product_create.html"
+
+{% extends 'base.html' %}
+
+{% block content %}
+<form method='POST'> {% csrf_token %}
+{{ form.as_p }}
+<input type='submit' value='Save' />
+</form>
+
+{% endblock content%}
+____________________________________________________________________________________
+• GO TO: urls.py/__pycache__
+
+# add "product_create_view"
+
+from products.view import product_detail_view, product_create_view
+
+urlpatterns = [
+   path('', home_view, name='home'),
+   path('about/', about_view),
+   path('contact/', contact_view),
+   path('create/', product_create_view),
+   path('product/', product_detail_view),
+   path('admin/', admin.site.urls),
+]
+____________________________________________________________________________________
+• GO TO: 127.0.0.1:8000/create/
+
+
+****************
+RAW HTML FORM
+****************
+
+• GO TO: product_create.html
+
+{% extends 'base.html' %}
+{% block content %}
+
+# <form> - only change URL
+# <form method='POST'> - it shows "forbiden"
+# <form action='/search/' method='GET' - it shows "page not found"
+# <form action='http://www.google.com/search/' method='POST'> - it shows "405. That's an error".
+# <form action='http://www.google.com/search/' method='GET'> - working
+# <form action='.' method='POST'> - it shows "forbiden"
+
+<form action='.' method='POST'>{% csrf_token %} - it's working now
+    <input type='text' name='title' placeholder='Your Title'/>
+    <input type='submit' value='Save' />
+</form>
+
+{% endblock %}
+
+• GO TO: "views.py" FROM "PRODUCTS"
+________________________________________________________________________________________________________________________
+# METHOD 1
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def product_create_view(request):
+    context = {}
+    return render(request, "products/product_create.html", context)
+________________________________________________________________________________________________________________________
+# METHOD 2
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def product_create_view(request):
+    print(request.GET) # it shows in terminal runserver "<QueryDict: {}>"
+    print(request.POST)
+
+    # if you type something in url "127.0.0.1:8000/create/?title=ryeamogusgus" 
+    # the "ryeamogusgus" will shown in terminal runserver <QueryDict: {'title': ['ryeamogusgus']}>
+
+    context = {}
+    return render(request, "products/product_create.html", context)
+________________________________________________________________________________________________________________________
+# METHOD 3
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def product_create_view(request):
+    print(request.GET['title'])
+
+    # if you type something in url "127.0.0.1:8000/create/?title=this is rye amogus" 
+    # the "this is rye amogus" will shown in terminal runserver "this is rye amogus"
+
+    print(request.POST) # this "POST" if you type something in search box not in url. the terminal runserver show the
+			# <QueryDict: {'csrfmiddlewaretoken': ['myjB3WxFRy0g....vvitt4'], 'title'" ['abc']}>
+    context = {}
+    return render(request, "products/product_create.html", context)
+________________________________________________________________________________________________________________________
+# METHOD 4
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def product_create_view(request):
+    print(request.GET['title'])
+    print(request.POST)
+
+    my_new_title = request.POST.get('title') # if you type "amogus" in search bar it shows in terminal runserver "amogus"
+    print(my_new_title)
+
+    # Product.objects.create(title=my_new_title)
+    context = {}
+    return render(request, "products/product_create.html", context)
+
+******************
+PURE DJANGO FORM
+******************
+___________________________________________________________________________________
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render
+from .forms import ProductForm, RawProductForm
+from .models import Product
+
+def product_create_view(request):
+    my_form = RawProductForm()
+    if request.method == "POST":
+	my_form = RawProductForm(request.POST)
+	if my_form.is_valid():
+	    # now the data is good
+	    print(my_form.cleaned_data)
+	    Product.objects.create(**my_form.cleaned_data) # "**" this is args
+	else:
+	    print(my_form.errors)
+    context = {
+	"form": my_form
+    }
+    return render(request, "products/product_create.html", context)
+___________________________________________________________________________________
+• GO TO: "forms.py" templates/products
+• GO TO: https://docs.djangoproject.com/en/2.0/ref/forms/fields/ - for reference
+
+from django import forms
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+   class Meta:
+       model = Product
+       fields = [
+	    'title',
+	    'description',
+	    'price'
+       ]
+
+class RawProductForm(forms.Form):
+    title	=  forms.Charfield()
+    description =  forms.CharField()
+    price       =  forms.DecimalField()
+___________________________________________________________________________________
+• GO TO: product_create.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action='.' method='POST'>{% csrf_token %}
+    {{ form.as_p }} # or "as_li", "as_ul", "as_html"
+    <input type='submit' value='Save' />
+</form>
+
+
+{% endblock %}
+
+***************
+FORM WIDGETS
+***************
+
+• GO TO: "forms.py" templates/products
+• GO TO: https://docs.djangoproject.com/en/2.0/ref/forms/fields/ - for reference "Core Field Arguments"
+
+from django import forms
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+   class Meta:
+       model = Product
+       fields = [
+	    'title',
+	    'description',
+	    'price'
+       ]
+
+class RawProductForm(forms.Form):
+    title	=  forms.Charfield(label='', widget=forms.TextInput(attrs={"placeholder": "Your title"}))
+    description =  forms.CharField(
+		         required=False, 
+			 widget=forms.Textarea(
+				 attrs={
+				     "placeholder": "Your description",
+				     "class": "new-class-name two",
+				     "id": "my-id-for-textarea",
+				     "rows": 20,
+				     'cols': 120
+				 }
+			      )
+			 )
+    price       =  forms.DecimalField(initial=199.99)
+
+*************************
+FORM VALIDATION METHODS
+*************************
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def product_create_view(request):
+    form =  ProductForm(request.POST or None)
+    if form.is_valid():
+	form.save()
+	
+    context = {
+	'form': form
+    }
+    return render(request, "product/product_create.html", context)
+
+def product_detail_view(request):
+    obj = Product.objects.get(id=1)
+    # context = {
+    #	'title': obj.title,
+    #	'description': obj.description
+    # }
+    context = {
+	'object': obj
+    }
+    return render(request, "product/product_detail.html", context)
+_______________________________________________________________________________________________
+• GO TO: "forms.py" templates/products
+• GO TO: https://docs.djangoproject.com/en/2.0/ref/forms/fields/ - for reference "Core Field Arguments"
+
+from django import forms
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+    title	=  forms.Charfield(label='', 
+		     widget=forms.TextInput(attrs={"placeholder": "Your title"}))
+    email       =  forms.EmailField()
+    description =  forms.CharField(
+		         required=False, 
+			 widget=forms.Textarea(
+				 attrs={
+				     "placeholder": "Your description",
+				     "class": "new-class-name two",
+				     "id": "my-id-for-textarea",
+				     "rows": 20,
+				     'cols': 120
+				 }
+			      )
+			 )
+   price     = forms.DecimalField(initial=199.99)
+
+   class Meta:
+       model = Product
+       fields = [
+	    'title',
+	    'description',
+	    'price'
+       ]
+   def clean_title(self, *args, **kwargs)
+       title = self.cleaned_data.get("title")
+       if not "CFE" in title:
+	   raise forms.ValidationError("This is not a valid title")
+       if not "news" in title:
+	   raise forms.ValidationError("This is not a valid title")
+       return title
+
+   def clean_email(self, *args, **kwargs)
+       email = self.cleaned_data.get("email")
+       if not email.endswith("edu"):
+	   raise forms.ValidationError("This is not a valid title")
+       return email
+    
+
+class RawProductForm(forms.Form):
+    title	=  forms.Charfield(label='', widget=forms.TextInput(attrs={"placeholder": "Your title"}))
+    description =  forms.CharField(
+		         required=False, 
+			 widget=forms.Textarea(
+				 attrs={
+				     "placeholder": "Your description",
+				     "class": "new-class-name two",
+				     "id": "my-id-for-textarea",
+				     "rows": 20,
+				     'cols': 120
+				 }
+			      )
+			 )
+
+****************************
+INITIAL VALUES FOR FORMS
+****************************
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render
+from .forms import ProductForm
+from .models import Product
+
+def render_initial_data(request):
+    initial_data = {
+	'title': "My this awesome title"
+    }
+    obj = Product.objects.get(id=1)
+    form = ProductForm(request.POST or None, instance=obj)
+    if form.is_valid():
+        form.save()
+    context = {
+	'form': form
+    }
+    return render(request, "products/product_create.html", context)
+
+*********************
+DYNAMIC URL ROUTING
+*********************
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render
+from .models import Product
+
+def dynamic_lookup_view(request, my_id):
+    obj = Product.objects.get(id=my_id)
+    context = {
+       "object": obj
+    }
+    return render(request, "products/product_detail.html", context)
+____________________________________________________________________________________
+• GO TO: urls.py/__pycache__
+
+from django.contrib import admin
+from django.urls import path
+
+from pages.views import home_view, contact_view, about_view
+from product.views import (
+     product_detail_view,
+     product_create_view,
+     render_initial_data,
+     dynamic_lookup_view
+     )
+
+urlpatterns = [
+    path('products/<int:id>/', dynamic_lookup_view, name='product'),
+
+************************
+HANDLE DOES NOT EXIST
+************************
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.http import Http404
+from django.shortcuts import render, get_object_or_404
+from .models import Product
+
+def dynamic_lookup_view(request, my_id):
+
+    obj = get_object_or_404(Product, id=id)
+    obj = Product.objects.get(id=id)
+    try:
+	obj = Product.objects.get(id=id)
+    except Product.DoesNotExist:
+        raise Http404
+    context = {
+       "object": obj
+    }
+    return render(request, "products/product_detail.html", context)
+
+************************
+DELETE AND CONFIRM
+************************
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Product
+
+def dynamic_lookup_view(request, my_id):
+
+    obj = get_object_or_404(Product, id=id)
+    # POST request
+    if request.method == "POST":
+       # confirming delete
+       obj.delete()
+       return redirect('../../')
+    context = {
+       "object": obj
+    }
+    return render(request, "products/product_detail.html", context)
+___________________________________________________________________________________
+• GO TO: product_create.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action='.' method='POST'>{% csrf_token %}
+    <h1>Do You want to delete the product "{{ object.title }}"?</h1>
+    <p><input type='submit' value='Yes' /> <a href='../'>Cancel</a></p>
+</form>
+
+
+{% endblock %}
+
+************************************
+VIEW OF A LIST OF DATABASE OBJECTS
+************************************
+
+• GO TO: "views.py" FROM "PRODUCTS"
+
+from django.shortcuts import render, get_object_or_404. redirect
+from .models import Product
+
+def product_list_view(request):
+    queryset = Product.objects.all() # list of objects
+    context = {
+	"object_list": queryset
+    }
+    return render(request, "products/product_list.html", context)
+___________________________________________________________________________________
+• GO TO: product_create.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+
+{% for instance in object_list %}
+      <p>{{ instance.id }} - {{ instance.title }}</p>
+
+{% end for %}
+
+{% endblock %}
+
+***********************
+DYNAMIC LINKING URLs
+***********************
+
+• GO TO: product_create.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ object_list }}
+
+{% for instance in object_list %}
+      <p>{{ instance.id }} - <a href='{{ instance.get_absolute_url }}'>{{ instance.title }}</a></p>
+
+{% end for %}
+
+{% endblock %}
+___________________________________________________________________________________
+• GO TO: products/migrations/models.py
+
+from django.db import models
+from django.urls import reverse
+
+class Product(models.Model)
+	title       = models.CharField(max_length=120) # max_length = required
+	description = models.TextField(blank=True, null=True)
+	price       = models.DecimalField(decimal_places=2, max_digits=10000)
+	summary     = models.TextField(blank=False, null=False)
+	featured    = models.BooleanField(default=False)
+
+	def get_absolute_url(self):
+	    return f"/products/{self.id}"
+
+***********************
+DJANGO URLs REVERSE
+***********************
+
+• GO TO: products/migrations/model.py
+
+from django.db import models
+from django.urls import reverse
+
+class Product(models.Model)
+	title       = models.CharField(max_length=120) # max_length = required
+	description = models.TextField(blank=True, null=True)
+	price       = models.DecimalField(decimal_places=2, max_digits=10000)
+	summary     = models.TextField(blank=False, null=False)
+	featured    = models.BooleanField(default=False)
+
+	def get_absolute_url(self):
+	    return reverse("product-detail", kwargs={"id": self.id}) # f"/products/{self.id}/"
+____________________________________________________________________________________
+• GO TO: urls.py/__pycache__
+
+from django.contrib import admin
+from django.urls import path
+
+from pages.views import home_view, contact_view, about_view
+from product.views import (
+     product_detail_view,
+     product_create_view,
+     render_initial_data,
+     dynamic_lookup_view
+     )
+
+urlpatterns = [
+    path('products/', product_list_view, name='product-list'),
+    path('products/<int:id>/', dynamic_lookup_view, name='product-detail'),
+    path('products/<int:id>/delete/', product_delete_view, name='product-delete'),
+
+*******************************
+IN APP URLs AND NAMESPACING
+*******************************
+
+• Source Code | https://kirr.co/lcdhbf
+____________________________________________________________________________________
+• GO TO: urls.py/__pycache__
+
+from django.urls import path
+from .views import (
+     product_detail_view,
+     product_create_view,
+     render_initial_data,
+     dynamic_lookup_view
+     
+)
+
+app_name = 'products'
+urlpatterns = [
+    path('', product_list_view, name='product-list'),
+    path('create/', product_create_view, name='product-list'),
+    path('<int:id>/', product_detail_view, name='product-detail'),
+    path('<int:id>/update/', product_update_view, name='product-update'),
+    path('<int:id>/delete/', product_delete_view, name='product-delete'),
+___________________________________________________________________________________
+• GO TO: products/migrations/models.py
+
+from django.db import models
+from django.urls import reverse
+
+class Product(models.Model)
+	title       = models.CharField(max_length=120) # max_length = required
+	description = models.TextField(blank=True, null=True)
+	price       = models.DecimalField(decimal_places=2, max_digits=10000)
+	summary     = models.TextField(blank=False, null=False)
+	featured    = models.BooleanField(default=False)
+
+	def get_absolute_url(self):
+	    return reverse("products:product-detail", kwargs={"id": self.id}) # f"/products/{self.id}/"
+
+*******************************
+CLASS BASED VIEWS - LIST VIEW
+*******************************
+
+1. Create a New App named Blog
+2. Add 'Blog' to your Django project
+3. Create a Model named Article
+4. Run Migrations
+5. Create a ModelForm for Article
+6. Create `article_list.html` & `article_detail.html` Template
+7. Add Article Model to the Admin
+8. Save a new Article object in the admin
+
+Confused? Start here: https://kirr.co/9ypik6
+
+__________________________________________________________________________
+• GO TO: views.py/try-django
+
+from django.shortcuts import render
+
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    UpdateView,
+    ListView,
+    DeleteView
+)
+
+from .models import Article
+
+class ArticleListView(ListView):
+    template_name = 'articles/article_list.html'
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    ArticleListView
+)
+
+app_name = 'articles'
+urlpatterns = [
+    path('', ArticleListView.as_view(), name='article-list'),
+    path('create/', view_name, name='article-create'),
+    path('<int:id>/', view_name, name=article-detail'),
+    path('<int:id>/update/', view_name, name='article-update'),
+    path('<int:id>/delete/', view_name, name='article-delete'),
+]
+__________________________________________________________________________
+• GO TO: urls.py/blog
+
+from django.contrib import admin
+from django.urls import include, path
+
+from pages.views import home_view, contact_view, about_view
+
+urlpatterns = [
+    path('blog', include('blog.urls')),
+    path('products/', include('products.urls')),
+    path('', home_view, name='home'),
+    path('about/<int:id>/', about_view, name='product-detail'),
+    path('contact/', contact_view),
+    path('admin/', admin.site.urls),
+]
+
+*********************************
+CLASS BASED VIEWS - DETAIL VIEW
+*********************************
+
+• GO TO: views.py/try-django
+
+from django.shortcuts import render, get_object_or_404
+
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    UpdateView,
+    ListView,
+    DeleteView
+)
+
+from .models import Article
+
+class ArticleListView(ListView):
+    template_name = 'articles/article_list.html'
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+
+class ArticleListView(DetailView):
+    template_name = 'articles/article_detail.html'
+    queryset = Article.objects.all()
+
+    def gets_object(self):
+	id_ = self.kwargs.get("id")
+	return get_object_or_404(Article, id=id_)
+
+# or
+
+class ArticleListView(DetailView):
+    template_name = 'articles/article_detail.html'
+    queryset = Article.objects.filter(id__gt=1)
+	
+__________________________________________________________________________
+• GO TO: urls.py/blog
+
+from django.contrib import admin
+from django.urls import include, path
+
+from pages.views import home_view, contact_view, about_view
+
+urlpatterns = [
+    path('blog', include('blog.urls')),
+    path('products/', include('products.urls')),
+    path('', home_view, name='home'),
+    path('about/<int:id>/', about_view, name='product-detail'),
+    path('contact/', contact_view),
+    path('admin/', admin.site.urls),
+]
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    ArticleDetailView,
+    ArticleListView
+)
+
+app_name = 'articles'
+urlpatterns = [
+    path('', ArticleListView.as_view(), name='article-list'),
+    # path('create/', view_name, name='article-create'),
+    path('<int:pk>/', ArticleDetailView.as_view() , name=article-detail'),
+    # path('<int:id>/update/', view_name, name='article-update'),
+    # path('<int:id>/delete/', view_name, name='article-delete'),
+]
+__________________________________________________________________________
+• GO TO: product_create.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ object_title }}</h1>
+<p>{{ object.content }}</p>
+{% endblock %}
+
+__________________________________________________________________________
+• GO TO: models.py
+
+from django.db import models
+
+class Article(models.Model):
+    # id = pk
+    title = models.CharField(max_length=120)
+    content = models.TextField()
+    active = models.BooleanField(default=True)
+
+*********************************
+CLASS BASED VIEWS - CREATE VIEW
+*********************************
+
+• GO TO: views.py/try-django
+
+from django.shortcuts import render, get_object_or_404
+
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    UpdateView,
+    ListView,
+    DeleteView
+)
+
+from .forms import ArticleModelForm
+from .models import Article
+
+class ArticleCreateView(CreateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleModelForm
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+    # success_url = '/'
+
+    def form_valid(self, form):
+	print(form.cleaned_data)
+	return super().form_valid(form)
+ 
+    # def get_success_url(self):
+	# return '/'
+
+class ArticleListView(ListView):
+    template_name = 'articles/article_list.html'
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+
+class ArticleListView(DetailView):
+    template_name = 'articles/article_detail.html'
+    queryset = Article.objects.all()
+
+    def gets_object(self):
+	id_ = self.kwargs.get("id")
+	return get_object_or_404(Article, id=id_)
+
+class ArticleUpdateView(UpdateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleModelForm
+    queryset = Article.objects.all()
+
+    def gets_object(self):
+	id_ = self.kwargs.get("id")
+	return get_object_or_404(Article, id=id_)
+
+    def form_valid(self, form):
+	print(form.cleaned_data)
+	return super().form_valid(form)
+__________________________________________________________________________
+• CREATE: article_create.html
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ object_title }}</h1>
+<p>{{ object.content }}</p>
+{% endblock %}
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    ArticleCreateView,
+    ArticleDetailView,
+    ArticleListView
+    ArticleUpdateView
+)
+
+app_name = 'articles'
+urlpatterns = [
+    path('', ArticleListView.as_view(), name='article-list'),
+    path('create/', ArticleCreateView.as_view(), name='article-create'),
+    path('<int:id>/', ArticleDetailView.as_view() , name=article-detail'),
+    path('<int:id>/update/', ArticleUpdateView.as_view(), name='article-update'),
+    # path('<int:id>/delete/', view_name, name='article-delete'),
+]
+
+__________________________________________________________________________
+• GO TO: forms.py
+
+from django import forms
+from .models import Article
+
+class ArticleModelForm(forms.ModelForm):
+    class Meta:
+	model = Article
+	fields = [
+	    'title',
+	    'content',
+	    'active',
+	]
+
+__________________________________________________________________________
+• GO TO: models.py
+
+from django.db import models
+from django.urls import reverse
+
+class Article(models.Model):
+    title = models.CharField(max_length=120)
+    content = models.TextField()
+    active = models.BooleanField(default=True)
+
+    def get_absolute_url(self):
+  	return reverse("articles:article-detail", kwargs={"id": self.id})
+
+*********************************
+CLASS BASED VIEWS - DELETE VIEW
+*********************************
+• GO TO: views.py/try-django
+
+from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
+
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    UpdateView,
+    ListView,
+    DeleteView
+)
+
+from .forms import ArticleModelForm
+from .models import Article
+
+class ArticleCreateView(CreateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleModelForm
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+    # success_url = '/'
+
+    def form_valid(self, form):
+	print(form.cleaned_data)
+	return super().form_valid(form)
+
+class ArticleListView(ListView):
+    template_name = 'articles/article_list.html'
+    queryset = Article.objects.all() # <blog>/<modelname>_list.html
+
+class ArticleListView(DetailView):
+    template_name = 'articles/article_detail.html'
+    queryset = Article.objects.all()
+
+    def gets_object(self):
+	id_ = self.kwargs.get("id")
+	return get_object_or_404(Article, id=id_)
+
+class ArticleUpdateView(UpdateView):
+    template_name = 'articles/article_create.html'
+    form_class = ArticleModelForm
+    queryset = Article.objects.all()
+
+    def gets_object(self):
+	id_ = self.kwargs.get("id")
+	return get_object_or_404(Article, id=id_)
+
+    def form_valid(self, form):
+	print(form.cleaned_data)
+	return super().form_valid(form)
+
+class ArticleDeleteView(DeleteView):
+    template_name = 'articles/article_delete.html'
+
+    def gets_object(self):
+	id_ = self.kwargs.get("id")
+	return get_object_or_404(Article, id=id_)
+ 
+    def get_success_url(self):
+	return reverse('articles:article-list')
+__________________________________________________________________________
+• CREATE: article_delete.html
+
+
+{% extends 'base.html' %}
+{% block content %}
+
+<form action='.' method='POST'>{% csrf_token %}
+     <h1>Do You want to delete the post "{{ object.title }}"?</h1>
+     <p><input type ='submit' value='Yes' /> <a href='../'>Cancel</a></p>
+
+<form>
+
+{% endblock %}
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    ArticleCreateView,
+    ArticleDeleteView,
+    ArticleDetailView,
+    ArticleListView,
+    ArticleUpdateView
+)
+
+app_name = 'articles'
+urlpatterns = [
+    path('', ArticleListView.as_view(), name='article-list'),
+    path('create/', ArticleCreateView.as_view(), name='article-create'),
+    path('<int:id>/', ArticleDetailView.as_view() , name=article-detail'),
+    path('<int:id>/update/', ArticleUpdateView.as_view(), name='article-update'),
+    path('<int:id>/delete/', ArticleDeleteView.as_view(), name='article-delete'),
+]
+
+******************************************
+FUNCTION BASED VIEW TO CLASS BASED VIEW
+******************************************
+
+• GO TO:  views.py
+
+from django.shortcuts import render
+from django.views import View
+
+# BASE VIEW CLASS = VIEW
+
+class CourseView(View):
+    template_name = "about.html"
+    def get(self, request, *args, **kwargs):
+	# GET method
+        return render(request, self.template_name', {})
+
+    # def post(request, *args, **kwargs):
+    #    return render(request, 'about.html', {})
+
+# HTTP METHODS
+def my_fbv(request, *args, **kwargs):
+    print(request.method)
+    return render(request, 'about.html', {})
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    CourseView,
+    # my_fbv
+)
+
+app_name = 'courses'
+urlpatterns = [
+    path('', CourseView.as_view(template_name='contact.html'), name='courses-list'),
+
+*****************************
+RAW DETAIL CLASS BASED VIEW
+*****************************
+
+• GO TO:  views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+
+# BASE VIEW CLASS = VIEW
+
+class CourseView(View):
+    template_name = "courses/course_detail.html" # DetailView
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+        return render(request, self.template_name', {})
+
+    # def post(request, *args, **kwargs):
+    #    return render(request, 'about.html', {})
+
+# HTTP METHODS
+def my_fbv(request, *args, **kwargs):
+    print(request.method)
+    return render(request, 'about.html', {})
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    CourseView,
+    # my_fbv
+)
+
+app_name = 'courses'
+urlpatterns = [
+    path('', CourseView.as_view(template_name='contact.html'), name='courses-list'),
+    # path('', my_fbv, name='courses-list'),
+
+    # path('create/', <create_view>, name='courses-create'),
+    path('<int:id>/', CourseView.as_view(), name='courses-detail'),
+__________________________________________________________________________
+• CREATE: course_detail.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ object.id }} - {{ object.title }}</h1>
+{% endblock %}
+
+*****************************
+RAW LIST CLASS BASED VIEW
+*****************************
+
+• GO TO:  views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+
+# BASE VIEW CLASS = VIEW
+
+class CourseListView(View):
+   template_name = "courses/course_list.html"
+   queryset = Course.objects.all()
+
+   def get_queryset(self):
+	return self.queryset
+
+   def get(self, request, *args, **kwargs):
+       context = {'object_list': self.get_queryset()}
+       return render(request, self.template_name, context)
+
+# class MyListView(CourseListView):
+#   queryset = Course.objects.filter(id=1)
+
+class CourseView(View):
+    template_name = "courses/course_detail.html" # DetailView
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+        return render(request, self.template_name', {})
+
+    # def post(request, *args, **kwargs):
+    #    return render(request, 'about.html', {})
+
+# HTTP METHODS
+def my_fbv(request, *args, **kwargs):
+    print(request.method)
+    return render(request, 'about.html', {})
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    CourseView,
+    MyListView
+    # my_fbv
+)
+
+app_name = 'courses'
+urlpatterns = [
+    path('', MyListView.as_view(template_name='contact.html'), name='courses-list'),
+    # path('', my_fbv, name='courses-list'),
+
+    # path('create/', <create_view>, name='courses-create'),
+    path('<int:id>/', CourseView.as_view(), name='courses-detail'),
+
+__________________________________________________________________________
+• CREATE: course_list.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for instance in object_list %}
+     <p>{{ instance.id }} - {{ instance.title }}</p>
+{% endfor %}
+
+{% endblock %}
+
+*****************************
+RAW CREATE CLASS BASED VIEW
+*****************************
+
+• GO TO:  views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+
+from .focus import CourseModelForm
+from .models import Course
+
+# BASE VIEW CLASS = VIEW
+
+class CourseCreateView(View):
+    template_name = "courses/course_create.html" # DetailView
+    def get(self, request, *args, **kwargs):
+	# GET method
+	form = CourseModelForm()
+	context = {"form" : form}
+        return render(request, self.template_name', context)
+
+    def post(self, request, *args, **kwargs):
+	# POST method
+	form = CourseModelForm(request.POST)
+	if form.is_valid():
+	    form.save()
+	    form = CourseModeForm()
+	context = {"form" : form}
+        return render(request, self.template_name', context)
+
+
+class CourseListView(View):
+   template_name = "courses/course_list.html"
+   queryset = Course.objects.all()
+
+   def get_queryset(self):
+	return self.queryset
+
+   def get(self, request, *args, **kwargs):
+       context = {'object_list': self.get_queryset()}
+       return render(request, self.template_name, context)
+
+# class MyListView(CourseListView):
+#   queryset = Course.objects.filter(id=1)
+
+class CourseView(View):
+    template_name = "courses/course_detail.html" # DetailView
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+        return render(request, self.template_name', context)
+
+    # def post(request, *args, **kwargs):
+    #    return render(request, 'about.html', {})
+
+# HTTP METHODS
+def my_fbv(request, *args, **kwargs):
+    print(request.method)
+    return render(request, 'about.html', {})
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    CourseView,
+    CourseListView,
+    CourseCreateView
+    # my_fbv
+)
+
+app_name = 'courses'
+urlpatterns = [
+    path('', CourseListView.as_view(), name='courses-list'),
+    # path('', my_fbv, name='courses-list'),
+
+    path('create/', CourseCreateView.as_view(), name='courses-create'),
+    path('<int:id>/', CourseView.as_view(), name='courses-detail'),
+
+*********************************
+RAW VALIDATION ON A POST METHOD
+*********************************
+
+• GO TO: forms.py
+
+from django import forms
+from .models import Course
+
+class CourseModelForm(forms.ModelForm):
+    class Meta:
+	model = Course
+	fields = [
+	    'title'
+	]
+
+     def clean_title(self):
+	 title = self.cleaned_data.get('title')
+	 if title.lower() == 'abc':
+	     raise forms.ValidationError("This is not a Valid Title")
+	 return title
+
+******************************
+RAW UPDATE CLASS BASED VIEW
+******************************
+
+• GO TO:  views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+
+from .focus import CourseModelForm
+from .models import Course
+
+# BASE VIEW CLASS = VIEW
+
+class CourseCreateView(View):
+    template_name = "courses/course_update.html" # DetailView
+
+    def get_object(self):
+	id = self.kwargs.get('id')
+	obj = None:
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+	return obj
+
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(instance=obj)
+	    context['object'] = obj
+	    context['form'] = form 	
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+	# POST method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(request.POST, instance=obj)
+	    if form.is_valid():
+		form.save()
+	    context['object'] = obj
+	    context['form'] = form 
+        return render(request, self.template_name, context)
+
+/////////////////////////////////////////////////////////////////////
+	form = CourseModelForm(request.POST)
+	if form.is_valid():
+	    form.save()
+	    form = CourseModeForm()
+	context = {"form" : form}
+        return render(request, self.template_name', context)
+/////////////////////////////////////////////////////////////////////
+
+class CourseListView(View):
+   template_name = "courses/course_list.html"
+   queryset = Course.objects.all()
+
+   def get_queryset(self):
+	return self.queryset
+
+   def get(self, request, *args, **kwargs):
+       context = {'object_list': self.get_queryset()}
+       return render(request, self.template_name, context)
+
+# class MyListView(CourseListView):
+#   queryset = Course.objects.filter(id=1)
+
+class CourseView(View):
+    template_name = "courses/course_detail.html" # DetailView
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+        return render(request, self.template_name', context)
+
+    # def post(request, *args, **kwargs):
+    #    return render(request, 'about.html', {})
+
+# HTTP METHODS
+def my_fbv(request, *args, **kwargs):
+    print(request.method)
+    return render(request, 'about.html', {})
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    CourseView,
+    CourseListView,
+    CourseCreateView,
+    CourseUpdateView,
+    # my_fbv
+)
+
+app_name = 'courses'
+urlpatterns = [
+    path('', CourseListView.as_view(), name='courses-list'),
+    # path('', my_fbv, name='courses-list'),
+
+    path('create/', CourseCreateView.as_view(), name='courses-create'),
+    path('<int:id>/', CourseView.as_view(), name='courses-detail'),
+    path('<int:id>/update', CourseUpdateView.as_view(), name='courses-update'),
+__________________________________________________________________________
+• CREATE: course_update.html
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Update: {{ object.id }} - {{ object.title }}</h1>
+
+<form action='.' method='POST'>{% csrf_token %}
+	{{ form.as_p }}
+	<input type='submit' value='Save' />
+</form> 
+{% endblock %}
+
+******************************
+RAW DELETE CLASS BASED VIEW 
+******************************
+
+• GO TO:  views.py
+
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+
+from .focus import CourseModelForm
+from .models import Course
+
+# BASE VIEW CLASS = VIEW
+
+
+# COURSE DELETE
+
+class CourseDeleteView(View):
+    template_name = "courses/course_delete.html" # DetailView
+
+    def get_object(self):
+	id = self.kwargs.get('id')
+	obj = None:
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+	return obj
+
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(instance=obj)
+	    context['object'] = obj
+	    context['form'] = form 	
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+	# POST method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(request.POST, instance=obj)
+	    if form.is_valid():
+		form.save()
+	    context['object'] = obj
+	    context['form'] = form 
+        return render(request, self.template_name, context)
+
+# COURSE UPDATE - IS MISSING!!!!!
+
+# COURSE CREATE
+
+class CourseCreateView(View):
+    template_name = "courses/course_update.html" # DetailView
+
+    def get_object(self):
+	id = self.kwargs.get('id')
+	obj = None:
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+	return obj
+
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(instance=obj)
+	    context['object'] = obj
+	    context['form'] = form 	
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+	# POST method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(request.POST, instance=obj)
+	    if form.is_valid():
+		form.save()
+	    context['object'] = obj
+	    context['form'] = form 
+        return render(request, self.template_name, context)
+
+# COURSE LIST
+
+class CourseListView(View):
+   template_name = "courses/course_list.html"
+   queryset = Course.objects.all()
+
+   def get_queryset(self):
+	return self.queryset
+
+   def get(self, request, *args, **kwargs):
+       context = {'object_list': self.get_queryset()}
+       return render(request, self.template_name, context)
+
+# class MyListView(CourseListView):
+#   queryset = Course.objects.filter(id=1)
+
+
+# COURSE VIEW
+
+class CourseView(View):
+    template_name = "courses/course_detail.html" # DetailView
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+        return render(request, self.template_name', context)
+
+    # def post(request, *args, **kwargs):
+    #    return render(request, 'about.html', {})
+
+# HTTP METHODS
+def my_fbv(request, *args, **kwargs):
+    print(request.method)
+    return render(request, 'about.html', {})
+
+__________________________________________________________________________
+• GO TO: urls.py/try-django
+
+from django.urls import path
+from .views import (
+    CourseView,
+    CourseListView,
+    CourseCreateView,
+    CourseUpdateView,
+    CourseDeleteView,
+    # my_fbv
+)
+
+app_name = 'courses'
+urlpatterns = [
+    path('', CourseListView.as_view(), name='courses-list'),
+    # path('', my_fbv, name='courses-list'),
+
+    path('create/', CourseCreateView.as_view(), name='courses-create'),
+    path('<int:id>/', CourseView.as_view(), name='courses-detail'),
+    path('<int:id>/update/', CourseUpdateView.as_view(), name='courses-update'),
+    path('<int:id>/delete/', CourseDeleteView.as_view(), name='courses-update'),    
+__________________________________________________________________________
+• CREATE: course_delete.html
+
+{% extends 'base.html' %}
+{% block content %}
+
+<form action='.' method='POST'>{% csrf_token %}
+     <h1>Do You want to delete the post "{{ object.title }}"?</h1>
+     <p><input type ='submit' value='Yes' /> <a href='../'>Cancel</a></p>
+
+<form>
+
+{% endblock %}
+
+
+************************************
+CUSTOM MIXIN FOR CLASS BASED VIEWS
+************************************ 
+
+class CourseObjectMixin(object):
+    model = Course
+    lookup = 'id'
+
+    def get_object(self):
+	id = self.kwargs.get(self.lookup)
+	obj = None:
+	if id is not None:
+	    obj = get_object_or_404(Course, id=id)
+	    context['object'] = obj
+	return obj
+
+# COURSE DELETE
+
+class CourseDeleteView(CourseObjectMixin, View): # (CourseObjectMixin, View): put this in all types except in list 
+    template_name = "courses/course_delete.html" # DetailView
+
+    def get(self, request, id=None, *args, **kwargs):
+	# GET method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(instance=obj)
+	    context['object'] = obj
+	    context['form'] = form 	
+        return render(request, self.template_name, context)
+
+    def post(self, request, id=None, *args, **kwargs):
+	# POST method
+	context = {}
+	obj = self.get_object()
+	if obj is not None:
+	    form = CourseModelForm(request.POST, instance=obj)
+	    if form.is_valid():
+		form.save()
+	    context['object'] = obj
+	    context['form'] = form 
+        return render(request, self.template_name, context)  
